@@ -3,9 +3,20 @@ import styled from "styled-components";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: auto;
   align-items: center;
-  background: linear-gradient(to top, #0575e6, #021b79);
+  text-shadow: -2px 3px 1px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(
+    to bottom,
+    #08244f,
+    #0b2f6a,
+    #0e3a87,
+    #10449f,
+    #124bb4,
+    #134cb5,
+    #1048b1,
+    #0b42ab
+  ); /*#0575e6, #021b79);*/
 `;
 
 export const ResponsiveContainer = styled.div`
@@ -13,6 +24,18 @@ export const ResponsiveContainer = styled.div`
   flex-direction: column;
   width: 90%;
   text-align: center;
+`;
+
+export const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+`;
+
+export const LogoContainer = styled(Header)`
+  display: flex;
+  margin: 0;
 `;
 
 export const SearchContainer = styled.div`
@@ -26,24 +49,46 @@ export const SearchContainer = styled.div`
 `;
 
 export const SectionContainer = styled(SearchContainer)`
-  flex-direction: column;
+  flex-direction: ${(props) => props.flex};
   align-items: center;
   justify-content: center;
   border-radius: 32px;
-  box-shadow: -3px 7px 55px 2px rgba(30, 30, 60, 0.35);
-  padding: 10px;
+  color: #fff;
+  background: none;
+  /* box-shadow: -3px 7px 55px 2px rgba(30, 30, 60, 0.35); */
+  padding: ${(props) => props.p};
+`;
+
+export const IconContainer = styled.div`
+  display: flex;
+  flex-direction: ${(props) => props.flex};
+  align-items: center;
+  justify-content: center;
+  border-radius: 32px;
+  background: none;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+  padding: ${(props) => props.p};
+  background: rgba(0, 16, 38, 0.3);
+  mix-blend-mode: normal;
+  color: #fff;
+  margin: 10px;
+  text-shadow: -2px 3px 1px rgba(0, 0, 0, 0.1);
 `;
 
 export const DetailsContainer = styled(SectionContainer)`
   box-shadow: none;
   margin: 0;
+  flex-direction: ${(props) => props.flex};
+  justify-content: ${(props) => props.justify};
+  align-items: ${(props) => props.align};
+  padding: ${(props) => props.p};
 `;
 
 export const Input = styled.input`
   width: 80%;
   border: none;
   background: none;
-  padding: 10px;
+  padding: 8px;
   color: #000;
   font-family: inherit;
   font-weight: 500;
@@ -52,8 +97,9 @@ export const Input = styled.input`
 `;
 
 export const Image = styled.img`
-  /* width: 150px;
-  height: 150px; */
+  margin: 0;
+  height: ${(props) => props.h};
+  width: ${(props) => props.w};
 `;
 
 export const IconButton = styled.button`
@@ -70,43 +116,88 @@ export const IconButton = styled.button`
 
 export const Heading = styled.h1`
   font-family: inherit;
-  font-weight: 300;
-  letter-spacing: 10px;
-  font-size: 36px;
+  font-weight: 700;
+  /* letter-spacing: 2px; */
+  font-size: 14px;
   margin: 10px;
   color: #eee;
 `;
 
 export const LocationName = styled.p`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
+  color: #fff;
 `;
 
-export const WeatherCondition = styled(LocationName)``;
+export const Button = styled.button`
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 24px;
+  padding: 4px;
+  cursor: pointer;
+`;
+
+export const WeatherCondition = styled(LocationName)`
+  font-weight: 400;
+  font-size: 18px;
+`;
 
 export const Temperature = styled.p`
   font-size: 64px;
   font-family: inherit;
   font-weight: bold;
+  padding: 0;
+  span {
+    font-weight: 400;
+  }
 `;
 
-export const Text = styled.p``;
+export const Text = styled.p`
+  font-size: ${(props) => props.font};
+  font-weight: ${(props) => props.weight};
+  padding: 4px;
+`;
+
+export const ForecastText = styled.p`
+  font-size: 16px;
+  font-weight: 400;
+  padding: 4px;
+  span {
+    font-size: 11px;
+  }
+`;
+
+export const Icon = styled.p`
+  font-size: 20px;
+`;
 
 export const List = styled.ul`
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   flex-wrap: wrap;
   margin-left: 0;
+  background: rgba(0, 16, 38, 0.3);
+  mix-blend-mode: normal;
+  color: #fff;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 32px;
+  margin: 10px;
   li {
     list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
     margin: 8px;
-    /* border: 1px solid; */
-    border-radius: 20px;
     color: #fff;
-    padding: 16px;
-    width: 80%;
-    max-width: 155px;
-    background: linear-gradient(60deg, #076585 20%, #fff 80%);
+    text-shadow: -2px 3px 1px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    div {
+      display: flex;
+      justify-content: space-around;
+    }
   }
 `;
 

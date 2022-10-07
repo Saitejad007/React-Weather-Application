@@ -1,40 +1,58 @@
-import {
-  Heading,
-  HStack,
-  Image,
-  ListItem,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import React from "react";
-import { MdNightsStay } from "react-icons/md";
+import { Image, Text, ForecastText } from "../GetData/styles";
 
 export const ForecastCard = (props) => {
   const { forecastData } = props;
 
-  const date =
-    forecastData.date !== "" ? new Date(forecastData.date * 1000) : "";
+  const date = new Date(forecastData.date);
+
+  let day = "";
+
+  // eslint-disable-next-line default-case
+  switch (date.getDay()) {
+    case 0:
+      day = "Sun";
+      break;
+    case 1:
+      day = "Mon";
+      break;
+    case 2:
+      day = "Tue";
+      break;
+    case 3:
+      day = "Wed";
+      break;
+    case 4:
+      day = "Thu";
+      break;
+    case 5:
+      day = "Fri";
+      break;
+    case 6:
+      day = "Sat";
+      break;
+  }
 
   return (
     <li>
-      <VStack>
-        <Text>{date.toDateString()}</Text>
-        <Text>{date.toLocaleTimeString()}</Text>
-      </VStack>
-      <HStack grow="1" justify="center">
-        <Heading as="h3" textAlign="center">
-          {Math.round(forecastData.minTemperature)}°C
-        </Heading>
-        <MoonIcon />
-      </HStack>
-      <HStack justify="center">
-        <Heading as="h3">{Math.round(forecastData.maxTemperature)}°C</Heading>
-        <SunIcon />
-      </HStack>
-      <Text>
-        {forecastData.weatherCondition} - {forecastData.description}
-      </Text>
+      <ForecastText>{date.toDateString()}</ForecastText>
+      <Image
+        alt="weather icon"
+        src={
+          forecastData.iconUrl !== ""
+            ? ` https://www.weatherbit.io/static/img/icons/${forecastData.iconUrl}.png`
+            : ""
+        }
+        w="48px"
+      />
+      <div>
+        <ForecastText>
+          {Math.round(forecastData.minTemperature)}°<span>C</span>
+        </ForecastText>
+        <ForecastText>
+          {Math.round(forecastData.maxTemperature)}°<span>C</span>
+        </ForecastText>
+      </div>
     </li>
   );
 };

@@ -3,6 +3,8 @@ import React, { useState } from "react";
 
 import { ForecastCard } from "../ForecastCard";
 import { BiSearch } from "react-icons/bi";
+import { WiShowers, WiStrongWind, WiHumidity } from "react-icons/wi";
+import { BiCurrentLocation } from "react-icons/bi";
 import { v4 as uuidv4 } from "uuid";
 import {
   Container,
@@ -17,9 +19,13 @@ import {
   LocationName,
   WeatherCondition,
   Text,
+  Icon,
   Image,
   List,
   Temperature,
+  LogoContainer,
+  Header,
+  Button,
 } from "./styles";
 
 export const GetData = () => {
@@ -129,10 +135,25 @@ export const GetData = () => {
 
   // console.log(sunrise);
 
+  const precipitation =
+    weather.precipitation != "null" ? weather.precipitation : 0;
+
   return (
     <Container>
       <ResponsiveContainer>
-        <Heading>Weather</Heading>
+        <Header>
+          <LogoContainer>
+            <img src="https://img.icons8.com/3d-fluency/48/000000/storm.png" />
+            <Heading>Weather Station</Heading>
+          </LogoContainer>
+          <LogoContainer>
+            <Button>
+              <BiCurrentLocation />
+            </Button>
+            <LocationName>{weather.name}</LocationName>
+          </LogoContainer>
+        </Header>
+
         <SearchContainer>
           <Input
             type="text"
@@ -147,7 +168,7 @@ export const GetData = () => {
             <BiSearch />
           </IconButton>
         </SearchContainer>
-        <SectionContainer>
+        <SectionContainer flex="column" p="8px">
           <Image
             alt="weather icon"
             src={
@@ -157,12 +178,71 @@ export const GetData = () => {
             }
           />
 
-          <DetailsContainer direction="column" p="3" align="center">
-            <Temperature>{Math.round(weather.temperature)}°C</Temperature>
-            <LocationName>{weather.name}</LocationName>
+          <DetailsContainer flex="column" align="center">
+            <Temperature>
+              {Math.round(weather.temperature)}°<span>c</span>
+            </Temperature>
+
             <WeatherCondition>{weather.weatherCondition}</WeatherCondition>
+            <DetailsContainer>
+              <Text font="18px" weight="400">
+                Clouds: {weather.clouds}%
+              </Text>
+              <Text font="18px" weight="400">
+                Feel: {Math.round(weather.feelsLike)}°C
+              </Text>
+            </DetailsContainer>
           </DetailsContainer>
         </SectionContainer>
+        <IconContainer flex="row" p="5px">
+          <DetailsContainer
+            flex="row"
+            justify="space-around"
+            align="center"
+            p="10px"
+          >
+            <Icon>
+              <WiShowers />
+            </Icon>
+            <Text font="14px" weight="500">
+              {precipitation}
+              mm/h
+            </Text>
+          </DetailsContainer>
+          <DetailsContainer
+            p="10px"
+            flex="row"
+            justify="space-around"
+            align="center"
+          >
+            <Icon>
+              <WiStrongWind />
+            </Icon>
+            <Text font="14px" weight="500">
+              {Math.round(weather.wind)}km/h
+            </Text>
+          </DetailsContainer>
+          <DetailsContainer
+            p="10px"
+            flex="row"
+            justify="space-around"
+            align="center"
+          >
+            <Icon>
+              <WiHumidity />
+            </Icon>
+            <Text font="14px" weight="500">
+              {weather.humidity}%
+            </Text>
+          </DetailsContainer>
+        </IconContainer>
+
+        <List>
+          {forecast.map((eachItem) => (
+            <ForecastCard forecastData={eachItem} key={eachItem.id} />
+          ))}
+        </List>
+
         {/* <Flex justify="space-around">
         <Flex direction="column" p="1">
           <Text p="1">Min- {Math.round(weather.minTemperature)}°C</Text>
@@ -182,11 +262,7 @@ export const GetData = () => {
         </Flex>
       </Flex>
       <Flex mt="2">
-        <List>
-          {forecast.map((eachItem) => (
-            <ForecastCard forecastData={eachItem} key={eachItem.id} />
-          ))}
-        </List>
+       
       </Flex> */}
       </ResponsiveContainer>
     </Container>
