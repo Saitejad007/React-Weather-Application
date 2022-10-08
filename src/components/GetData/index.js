@@ -27,6 +27,7 @@ import {
   Header,
   Button,
 } from "./styles";
+import { ResponsiveMap } from "../ResponsiveMap";
 
 export const GetData = () => {
   const API_KEY = "cebae210006b4c97bdb902dac1ad1522";
@@ -52,6 +53,8 @@ export const GetData = () => {
     date: "",
     windDirection: "",
     uv: "",
+    lon: "",
+    lat: "",
   });
   const [forecast, setForecast] = useState([]);
 
@@ -83,14 +86,16 @@ export const GetData = () => {
         wind: data.wind_spd,
         iconUrl: data.weather.icon,
         uv: data.uv,
+        lat: data.lat,
+        lon: data.lon,
       }));
       setLocation("");
     }
     const url = `https://api.weatherbit.io/v2.0/forecast/daily?city=${location}&days=7&key=${API_KEY}`;
     try {
-      const weatherData = await fetch(url);
-      if (weatherData.ok) {
-        const forecastJsonObject = await weatherData.json();
+      const forecastData = await fetch(url);
+      if (forecastData.ok) {
+        const forecastJsonObject = await forecastData.json();
         const forecastList = forecastJsonObject.data;
         const convertedList = forecastList.map((eachItem) => ({
           id: uuidv4(),
@@ -136,14 +141,17 @@ export const GetData = () => {
   // console.log(sunrise);
 
   const precipitation =
-    weather.precipitation != "null" ? weather.precipitation : 0;
+    weather.precipitation !== "null" ? weather.precipitation : 0;
 
   return (
     <Container>
       <ResponsiveContainer>
         <Header>
           <LogoContainer>
-            <img src="https://img.icons8.com/3d-fluency/48/000000/storm.png" />
+            <img
+              src="https://img.icons8.com/3d-fluency/48/000000/storm.png"
+              alt="weather icon"
+            />
             <Heading>Weather Station</Heading>
           </LogoContainer>
           <LogoContainer>
@@ -236,7 +244,7 @@ export const GetData = () => {
             </Text>
           </DetailsContainer>
         </IconContainer>
-
+        <ResponsiveMap weatherObject={weather} />
         <List>
           {forecast.map((eachItem) => (
             <ForecastCard forecastData={eachItem} key={eachItem.id} />

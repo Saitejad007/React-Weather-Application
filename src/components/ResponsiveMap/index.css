@@ -1,0 +1,16 @@
+.leaflet-container {
+  width: 100%;
+  height: 50vh;
+  border-radius: 32px;
+}
+
+.leaflet-top {
+  padding: 10px;
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
