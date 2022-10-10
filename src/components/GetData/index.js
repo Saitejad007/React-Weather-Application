@@ -34,6 +34,11 @@ export const GetData = () => {
   // const baseUrl = "https://api.openweathermap.org/data/2.5";
 
   const [location, setLocation] = useState("");
+  const [framedata, setFramedata] = useState({
+    host: "",
+    radar: "",
+    satellite: "",
+  });
   const [weather, setWeather] = useState({
     name: "",
     clouds: "",
@@ -53,8 +58,10 @@ export const GetData = () => {
     date: "",
     windDirection: "",
     uv: "",
-    lon: "",
-    lat: "",
+    coords: {
+      lat: 28.6448,
+      lon: 77.216721,
+    },
   });
   const [forecast, setForecast] = useState([]);
 
@@ -86,8 +93,10 @@ export const GetData = () => {
         wind: data.wind_spd,
         iconUrl: data.weather.icon,
         uv: data.uv,
-        lat: data.lat,
-        lon: data.lon,
+        coords: {
+          lat: data.lat,
+          lon: data.lon,
+        },
       }));
       setLocation("");
     }
@@ -119,6 +128,23 @@ export const GetData = () => {
           sunset: eachItem.sunset_ts,
         }));
         setForecast(convertedList);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
+    try {
+      const rainViewerResp = await fetch(
+        "https://api.rainviewer.com/public/weather-maps.json"
+      );
+      if (rainViewerResp.ok) {
+        const jsonData = await rainViewerResp.json();
+        setFramedata((previousData) => ({
+          ...previousData,
+          host: jsonData.host,
+          radar: jsonData.radar,
+          satellite: jsonData.satellite,
+        }));
       }
     } catch (e) {
       console.log(e);
@@ -244,7 +270,15 @@ export const GetData = () => {
             </Text>
           </DetailsContainer>
         </IconContainer>
-        <ResponsiveMap weatherObject={weather} />
+        {/* Raw embeddable frame of RainViewer API service */}
+        {/* <iframe
+          src="https://www.rainviewer.com/map.html?loc=37.44,-97.2729,5&oFa=0&oC=1&oU=0&oCS=1&oF=0&oAP=1&c=3&o=90&lm=1&layer=radar&sm=1&sn=1"
+          width="100%"
+          frameborder="0"
+          style={{ border: 0, height: "50vh" }}
+          allowfullscreen
+        ></iframe> */}
+        <ResponsiveMap coordinates={weather.coords} framedata={framedata} />
         <List>
           {forecast.map((eachItem) => (
             <ForecastCard forecastData={eachItem} key={eachItem.id} />
