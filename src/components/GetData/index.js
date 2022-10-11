@@ -3,18 +3,28 @@ import React, { useState } from "react";
 
 import { ForecastCard } from "../ForecastCard";
 import { BiSearch } from "react-icons/bi";
-import { WiShowers, WiStrongWind, WiHumidity } from "react-icons/wi";
+import { MdVisibility } from "react-icons/md";
+import {
+  WiShowers,
+  WiStrongWind,
+  WiHumidity,
+  WiBarometer,
+} from "react-icons/wi";
 import { BiCurrentLocation } from "react-icons/bi";
+import { BsFillSunsetFill, BsFillSunriseFill } from "react-icons/bs";
 import { v4 as uuidv4 } from "uuid";
 import {
-  Container,
+  MainContainer,
   Input,
   IconButton,
   SectionContainer,
   SearchContainer,
   IconContainer,
+  CurrentWeatherContainer,
   ResponsiveContainer,
   DetailsContainer,
+  Container,
+  CurrentWeatherResponsiveContainer,
   Heading,
   LocationName,
   WeatherCondition,
@@ -26,6 +36,7 @@ import {
   LogoContainer,
   Header,
   Button,
+  TodayText,
 } from "./styles";
 import { ResponsiveMap } from "../ResponsiveMap";
 
@@ -100,7 +111,7 @@ export const GetData = () => {
       }));
       setLocation("");
     }
-    const url = `https://api.weatherbit.io/v2.0/forecast/daily?city=${location}&days=7&key=${API_KEY}`;
+    const url = `https://api.weatherbit.io/v2.0/forecast/daily?city=${location}&days=8&key=${API_KEY}`;
     try {
       const forecastData = await fetch(url);
       if (forecastData.ok) {
@@ -127,28 +138,29 @@ export const GetData = () => {
           sunrise: eachItem.sunrise_ts,
           sunset: eachItem.sunset_ts,
         }));
-        setForecast(convertedList);
+        const updatedList = convertedList.slice(1);
+        setForecast(updatedList);
       }
     } catch (e) {
       console.log(e);
     }
 
-    try {
-      const rainViewerResp = await fetch(
-        "https://api.rainviewer.com/public/weather-maps.json"
-      );
-      if (rainViewerResp.ok) {
-        const jsonData = await rainViewerResp.json();
-        setFramedata((previousData) => ({
-          ...previousData,
-          host: jsonData.host,
-          radar: jsonData.radar,
-          satellite: jsonData.satellite,
-        }));
-      }
-    } catch (e) {
-      console.log(e);
-    }
+    // try {
+    //   const rainViewerResp = await fetch(
+    //     "https://api.rainviewer.com/public/weather-maps.json"
+    //   );
+    //   if (rainViewerResp.ok) {
+    //     const jsonData = await rainViewerResp.json();
+    //     setFramedata((previousData) => ({
+    //       ...previousData,
+    //       host: jsonData.host,
+    //       radar: jsonData.radar,
+    //       satellite: jsonData.satellite,
+    //     }));
+    //   }
+    // } catch (e) {
+    //   console.log(e);
+    // }
   };
 
   const handleChange = (e) => {
@@ -169,8 +181,10 @@ export const GetData = () => {
   const precipitation =
     weather.precipitation !== "null" ? weather.precipitation : 0;
 
+  const date = new Date();
+
   return (
-    <Container>
+    <MainContainer>
       <ResponsiveContainer>
         <Header>
           <LogoContainer>
@@ -184,7 +198,9 @@ export const GetData = () => {
             <Button>
               <BiCurrentLocation />
             </Button>
-            <LocationName>{weather.name}</LocationName>
+            <LocationName>
+              {weather.name}, {weather.country}
+            </LocationName>
           </LogoContainer>
         </Header>
 
@@ -202,83 +218,173 @@ export const GetData = () => {
             <BiSearch />
           </IconButton>
         </SearchContainer>
-        <SectionContainer flex="column" p="8px">
-          <Image
-            alt="weather icon"
-            src={
-              weather.iconUrl !== ""
-                ? ` https://www.weatherbit.io/static/img/icons/${weather.iconUrl}.png`
-                : ""
-            }
-          />
+        <CurrentWeatherContainer>
+          <CurrentWeatherResponsiveContainer>
+            <SectionContainer flex="column" p="8px">
+              <TodayText>Today - {date.toLocaleString()}</TodayText>
+              <Image
+                alt="weather icon"
+                src={
+                  weather.iconUrl !== ""
+                    ? ` https://www.weatherbit.io/static/img/icons/${weather.iconUrl}.png`
+                    : ""
+                }
+              />
 
-          <DetailsContainer flex="column" align="center">
-            <Temperature>
-              {Math.round(weather.temperature)}°<span>c</span>
-            </Temperature>
+              <DetailsContainer flex="column" align="center">
+                <Temperature>
+                  {Math.round(weather.temperature)}°<span>c</span>
+                </Temperature>
 
-            <WeatherCondition>{weather.weatherCondition}</WeatherCondition>
-            <DetailsContainer>
-              <Text font="18px" weight="400">
-                Clouds: {weather.clouds}%
-              </Text>
-              <Text font="18px" weight="400">
-                Feel: {Math.round(weather.feelsLike)}°C
-              </Text>
-            </DetailsContainer>
-          </DetailsContainer>
-        </SectionContainer>
-        <IconContainer flex="row" p="5px">
-          <DetailsContainer
-            flex="row"
-            justify="space-around"
-            align="center"
-            p="10px"
-          >
-            <Icon>
-              <WiShowers />
-            </Icon>
-            <Text font="14px" weight="500">
-              {precipitation}
-              mm/h
-            </Text>
-          </DetailsContainer>
-          <DetailsContainer
-            p="10px"
-            flex="row"
-            justify="space-around"
-            align="center"
-          >
-            <Icon>
-              <WiStrongWind />
-            </Icon>
-            <Text font="14px" weight="500">
-              {Math.round(weather.wind)}km/h
-            </Text>
-          </DetailsContainer>
-          <DetailsContainer
-            p="10px"
-            flex="row"
-            justify="space-around"
-            align="center"
-          >
-            <Icon>
-              <WiHumidity />
-            </Icon>
-            <Text font="14px" weight="500">
-              {weather.humidity}%
-            </Text>
-          </DetailsContainer>
-        </IconContainer>
-        {/* Raw embeddable frame of RainViewer API service */}
-        {/* <iframe
+                <WeatherCondition>{weather.weatherCondition}</WeatherCondition>
+                <DetailsContainer>
+                  <Text font="18px" weight="400">
+                    Clouds: {weather.clouds}%
+                  </Text>
+                  <Text font="18px" weight="400">
+                    Feel: {Math.round(weather.feelsLike)}°c
+                  </Text>
+                </DetailsContainer>
+              </DetailsContainer>
+            </SectionContainer>
+            <IconContainer flex="row" p="5px">
+              <DetailsContainer
+                flex="row"
+                justify="center"
+                align="center"
+                p="10px"
+                w="30%"
+              >
+                <Icon>
+                  <WiShowers />
+                </Icon>
+                <Text font="14px" weight="500">
+                  {precipitation}
+                  mm/h
+                </Text>
+              </DetailsContainer>
+              <DetailsContainer
+                p="10px"
+                flex="row"
+                justify="center"
+                align="center"
+                w="30%"
+              >
+                <Icon>
+                  <WiStrongWind />
+                </Icon>
+                <Text font="14px" weight="500">
+                  {Math.round(weather.wind)}km/h
+                </Text>
+              </DetailsContainer>
+              <DetailsContainer
+                p="10px"
+                flex="row"
+                justify="center"
+                align="center"
+                w="30%"
+              >
+                <Icon>
+                  <WiHumidity />
+                </Icon>
+                <Text font="14px" weight="500">
+                  {weather.humidity}%
+                </Text>
+              </DetailsContainer>
+              <DetailsContainer
+                p="10px"
+                flex="row"
+                justify="center"
+                align="center"
+                w="30%"
+              >
+                <Icon>
+                  <MdVisibility />
+                </Icon>
+                <Text font="14px" weight="500">
+                  {weather.visibility} km
+                </Text>
+              </DetailsContainer>
+              <DetailsContainer
+                p="10px"
+                flex="row"
+                justify="center"
+                align="center"
+                w="30%"
+              >
+                <Icon>
+                  <WiBarometer />
+                </Icon>
+                <Text font="14px" weight="500">
+                  {weather.pressure} hPa
+                </Text>
+              </DetailsContainer>
+              <DetailsContainer
+                p="10px"
+                flex="row"
+                justify="center"
+                align="center"
+                w="30%"
+              >
+                {/* <Icon>UV</Icon> */}
+                <Text font="14px" weight="500">
+                  <span>UV</span> {Math.round(weather.uv, 2)}
+                </Text>
+              </DetailsContainer>
+              <DetailsContainer
+                p="10px"
+                flex="row"
+                justify="center"
+                align="center"
+                w="30%"
+              >
+                {/* <Icon>
+                  <WiBarometer />
+                </Icon> */}
+                <Text font="14px" weight="500">
+                  aqi {weather.airquality}
+                </Text>
+              </DetailsContainer>
+              <DetailsContainer
+                p="10px"
+                flex="row"
+                justify="center"
+                align="center"
+                w="30%"
+              >
+                <Icon>
+                  <BsFillSunriseFill />
+                </Icon>
+                <Text font="14px" weight="500">
+                  {weather.sunrise}
+                </Text>
+              </DetailsContainer>
+              <DetailsContainer
+                p="10px"
+                flex="row"
+                justify="center"
+                align="center"
+                w="30%"
+              >
+                <Icon>
+                  <BsFillSunsetFill />
+                </Icon>
+                <Text font="14px" weight="500">
+                  {weather.sunset}
+                </Text>
+              </DetailsContainer>
+            </IconContainer>
+          </CurrentWeatherResponsiveContainer>
+          {/* Raw embeddable frame of RainViewer API service */}
+          {/* <iframe
           src="https://www.rainviewer.com/map.html?loc=37.44,-97.2729,5&oFa=0&oC=1&oU=0&oCS=1&oF=0&oAP=1&c=3&o=90&lm=1&layer=radar&sm=1&sn=1"
           width="100%"
           frameborder="0"
           style={{ border: 0, height: "50vh" }}
           allowfullscreen
         ></iframe> */}
-        <ResponsiveMap coordinates={weather.coords} framedata={framedata} />
+          <ResponsiveMap coordinates={weather.coords} framedata={framedata} />
+        </CurrentWeatherContainer>
         <List>
           {forecast.map((eachItem) => (
             <ForecastCard forecastData={eachItem} key={eachItem.id} />
@@ -307,6 +413,6 @@ export const GetData = () => {
        
       </Flex> */}
       </ResponsiveContainer>
-    </Container>
+    </MainContainer>
   );
 };

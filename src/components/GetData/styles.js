@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-export const Container = styled.div`
+export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: auto;
@@ -19,11 +19,35 @@ export const Container = styled.div`
   ); /*#0575e6, #021b79);*/
 `;
 
+export const Container = styled.div`
+  display: flex;
+  flex-direction: ${(props) => props.flex};
+  justify-content: ${(props) => props.justify};
+  align-items: ${(props) => props.align};
+`;
+
+export const CurrentWeatherResponsiveContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media screen and (min-width: 992px) {
+    width: 40vw;
+    justify-content: space-between;
+    padding-top: 20px;
+  }
+`;
+
 export const ResponsiveContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
   text-align: center;
+`;
+
+export const CurrentWeatherContainer = styled.div`
+  @media screen and (min-width: 992px) {
+    display: flex;
+    flex-direction: row;
+  }
 `;
 
 export const Header = styled.div`
@@ -73,6 +97,7 @@ export const IconContainer = styled.div`
   color: #fff;
   margin: 10px;
   text-shadow: -2px 3px 1px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
 `;
 
 export const DetailsContainer = styled(SectionContainer)`
@@ -82,6 +107,7 @@ export const DetailsContainer = styled(SectionContainer)`
   justify-content: ${(props) => props.justify};
   align-items: ${(props) => props.align};
   padding: ${(props) => props.p};
+  width: ${(props) => props.w};
 `;
 
 export const Input = styled.input`
@@ -184,23 +210,106 @@ export const List = styled.ul`
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
   border-radius: 32px;
   margin: 10px;
-  li {
-    list-style: none;
+`;
+
+export const ListItem = styled.li`
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 8px;
+  color: #fff;
+  text-shadow: -2px 3px 1px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+  div {
     display: flex;
-    flex-direction: row;
     justify-content: space-around;
-    align-items: center;
-    margin: 8px;
-    color: #fff;
-    text-shadow: -2px 3px 1px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    div {
-      display: flex;
-      justify-content: space-around;
-    }
   }
 `;
 
+export const MainData = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+export const expand = keyframes`
+  0% {
+    opacity: 0;
+    /* transform: scaleY(0); */
+  }
+  100% {
+    opacity: 1;
+    /* transform: scaleY(1); */
+  }
+`;
+
+export const AdditionalData = styled.div`
+  overflow: hidden;
+  animation: expand 1s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const InnerList = styled.ul`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: 90%;
+  background: rgba(0, 16, 38, 0.35);
+  padding: 10px;
+  border-radius: 16px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+  @media screen and (min-width: 768px) {
+    padding: 16px;
+    justify-content: space-between;
+  }
+`;
+
+export const InnerListItem = styled.li`
+  list-style: none;
+  text-align: left;
+  width: 50%;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 3px;
+  font-weight: 300;
+  @media screen and (min-width: 768px) {
+    width: 33%;
+    text-align: center;
+    padding: 5px;
+    font-size: 14px;
+  }
+`;
+
+export const ExpandButton = styled.button`
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: blue;
+  background: #ffffff;
+  border-radius: 32px;
+  padding: 5px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+  transition: all 0.4s ease-in-out;
+  &:hover {
+    scale: 1.25;
+    transition: all 0.4s ease-in-out;
+  }
+`;
+
+export const TodayText = styled.p`
+  font-family: inherit;
+  /* align-self: flex-start; */
+  font-size: 20px;
+  font-weight: 700;
+`;
 // background: linear-gradient(to right, #bdc3c7, #2c3e50) - rain
 //background: linear-gradient(to right, #076585, #fff) - clear sky
 //background: linear-gradient(to right, #3d9eaa, #ffe47a)- sunny #ffc45a

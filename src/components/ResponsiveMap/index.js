@@ -9,7 +9,7 @@ export function GetPosition(coordinates) {
   useEffect(() => {
     setPosition(coordinates.coordinates);
   }, [coordinates.coordinates]);
-  map.flyTo(position, map.getZoom(), { duration: 2 });
+  map.flyTo(position, 12, { duration: 2 });
 
   // RainViewer API
 
@@ -28,14 +28,14 @@ export const ResponsiveMap = (props) => {
 
   return (
     <div className="main-container">
-      <MapContainer center={pos} zoom={13} scrollWheelZoom={false}>
+      <MapContainer center={pos} zoom={12} scrollWheelZoom={false}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <TileLayer
-          url={`${framedata.host}${framedata.radar.nowcast[0].path}/512/{z}/{x}/{y}/${pos.lat}/${pos.lon}/0/0_0.png`}
-        />
+        {/* <TileLayer
+          url={`${framedata.host}${framedata.radar.nowcast[0].path}/4096/{z}/{x}/{y}/${pos.lat}/${pos.lon}/2/0_0.png`}
+        /> */}
         <GetPosition coordinates={pos} />
       </MapContainer>
     </div>
