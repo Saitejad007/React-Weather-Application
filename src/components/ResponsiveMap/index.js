@@ -23,7 +23,7 @@ export function GetPosition(coordinates) {
 }
 
 export const ResponsiveMap = (props) => {
-  const { coordinates, framedata } = props;
+  const { coordinates } = props;
   const pos = [coordinates.lat, coordinates.lon];
 
   return (
@@ -33,9 +33,6 @@ export const ResponsiveMap = (props) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {/* <TileLayer
-          url={`${framedata.host}${framedata.radar.nowcast[0].path}/4096/{z}/{x}/{y}/${pos.lat}/${pos.lon}/2/0_0.png`}
-        /> */}
         <GetPosition coordinates={pos} />
       </MapContainer>
     </div>

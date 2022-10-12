@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
 export const MainContainer = styled.div`
   display: flex;
@@ -55,7 +55,6 @@ export const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 10px;
-  /* height: 10vh; */
 `;
 
 export const LogoContainer = styled(Header)`
@@ -80,7 +79,6 @@ export const SectionContainer = styled(SearchContainer)`
   border-radius: 32px;
   color: #fff;
   background: none;
-  /* box-shadow: -3px 7px 55px 2px rgba(30, 30, 60, 0.35); */
   padding: ${(props) => props.p};
 `;
 
@@ -144,7 +142,6 @@ export const IconButton = styled.button`
 export const Heading = styled.h1`
   font-family: inherit;
   font-weight: 700;
-  /* letter-spacing: 2px; */
   font-size: 14px;
   margin: 10px;
   color: #eee;
@@ -239,25 +236,6 @@ export const MainData = styled.div`
   align-items: center;
 `;
 
-export const expand = keyframes`
-  0% {
-    opacity: 0;
-    /* transform: scaleY(0); */
-  }
-  100% {
-    opacity: 1;
-    /* transform: scaleY(1); */
-  }
-`;
-
-export const AdditionalData = styled.div`
-  overflow: hidden;
-  animation: expand 1s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
 export const InnerList = styled.ul`
   display: flex;
   flex-direction: row;
@@ -309,7 +287,6 @@ export const ExpandButton = styled.button`
 
 export const TodayText = styled.p`
   font-family: inherit;
-  /* align-self: flex-start; */
   font-size: 20px;
   font-weight: 700;
 `;

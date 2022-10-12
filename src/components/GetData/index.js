@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import React, { useState, CSSProperties } from "react";
-import ClipLoader from "react-spinners/ClipLoader";
+import React, { useState } from "react";
 import { ForecastCard } from "../ForecastCard";
 import { BiSearch } from "react-icons/bi";
 import { MdVisibility } from "react-icons/md";
@@ -24,7 +23,6 @@ import {
   CurrentWeatherContainer,
   ResponsiveContainer,
   DetailsContainer,
-  Container,
   CurrentWeatherResponsiveContainer,
   Heading,
   LocationName,
@@ -44,16 +42,9 @@ import { HashLoader } from "react-spinners";
 
 export const GetData = () => {
   const API_KEY = "cebae210006b4c97bdb902dac1ad1522";
-  // const baseUrl = "https://api.openweathermap.org/data/2.5";
-
+  const color = "#ffffff";
   const [location, setLocation] = useState("");
   let [loading, setLoading] = useState(true);
-  let [color, setColor] = useState("#ffffff");
-  const [framedata, setFramedata] = useState({
-    host: "",
-    radar: "",
-    satellite: "",
-  });
   const [weather, setWeather] = useState({
     name: "",
     clouds: "",
@@ -150,42 +141,14 @@ export const GetData = () => {
     } catch (e) {
       console.log(e);
     }
-
-    // try {
-    //   const rainViewerResp = await fetch(
-    //     "https://api.rainviewer.com/public/weather-maps.json"
-    //   );
-    //   if (rainViewerResp.ok) {
-    //     const jsonData = await rainViewerResp.json();
-    //     setFramedata((previousData) => ({
-    //       ...previousData,
-    //       host: jsonData.host,
-    //       radar: jsonData.radar,
-    //       satellite: jsonData.satellite,
-    //     }));
-    //   }
-    // } catch (e) {
-    //   console.log(e);
-    // }
   };
 
   const handleChange = (e) => {
     setLocation(e.target.value);
   };
 
-  // const sunrise =
-  //   weather.sunrise !== ""
-  //     ? new Date(weather.sunrise * 1000).toLocaleTimeString()
-  //     : "";
-  // const sunset =
-  //   weather.sunset !== ""
-  //     ? new Date(weather.sunset * 1000).toLocaleTimeString()
-  //     : "";
-
-  // console.log(sunrise);
-
   const precipitation =
-    weather.precipitation !== "null" ? weather.precipitation : 0;
+    weather.precipitation !== null ? weather.precipitation : 0;
 
   const date = new Date();
 
@@ -347,7 +310,6 @@ export const GetData = () => {
                     align="center"
                     w="30%"
                   >
-                    {/* <Icon>UV</Icon> */}
                     <Text font="14px" weight="500">
                       <span>UV</span> {Math.round(weather.uv, 2)}
                     </Text>
@@ -359,9 +321,6 @@ export const GetData = () => {
                     align="center"
                     w="30%"
                   >
-                    {/* <Icon>
-                  <WiBarometer />
-                </Icon> */}
                     <Text font="14px" weight="500">
                       aqi {weather.airquality}
                     </Text>
@@ -404,21 +363,13 @@ export const GetData = () => {
           style={{ border: 0, height: "50vh" }}
           allowfullscreen
         ></iframe> */}
-              <ResponsiveMap
-                coordinates={weather.coords}
-                framedata={framedata}
-              />
+              <ResponsiveMap coordinates={weather.coords} />
             </CurrentWeatherContainer>
             <List>
               {forecast.map((eachItem) => (
                 <ForecastCard forecastData={eachItem} key={eachItem.id} />
               ))}
             </List>
-
-            {/*
-          <Text p="1">Sunrise- {sunrise.toLocaleString()}</Text>
-          <Text p="1">Sunset- {sunset.toLocaleString()}</Text>
-*/}
           </div>
         )}
       </ResponsiveContainer>

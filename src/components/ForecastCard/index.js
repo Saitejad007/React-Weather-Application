@@ -3,12 +3,10 @@ import {
   Image,
   ForecastText,
   MainData,
-  AdditionalData,
   InnerList,
   ListItem,
   InnerListItem,
   ExpandButton,
-  expand,
 } from "../GetData/styles";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { motion } from "framer-motion";
@@ -27,17 +25,14 @@ export const ForecastCard = (props) => {
     }
   };
 
-  const expandAnimation = {
-    visible: {
-      scaleY: 1,
-      transition: {
-        ease: "easeInOut",
-        duration: 0.3,
-        // dealy: 0.5,
-      },
-    },
-    hidden: { scaleY: 0 },
-  };
+  const sunrise =
+    forecastData.sunrise !== ""
+      ? new Date(forecastData.sunrise * 1000).toLocaleTimeString()
+      : "";
+  const sunset =
+    forecastData.sunset !== ""
+      ? new Date(forecastData.sunset * 1000).toLocaleTimeString()
+      : "";
 
   return (
     <ListItem>
@@ -88,8 +83,8 @@ export const ForecastCard = (props) => {
             <InnerListItem>
               Precip: {forecastData.precipitation} mm
             </InnerListItem>
-            <InnerListItem>Sunrise: {forecastData.sunrise}</InnerListItem>
-            <InnerListItem>Sunset: {forecastData.sunset}</InnerListItem>
+            <InnerListItem>Sunrise: {sunrise}</InnerListItem>
+            <InnerListItem>Sunset: {sunset}</InnerListItem>
           </InnerList>
         </motion.div>
       ) : null}
