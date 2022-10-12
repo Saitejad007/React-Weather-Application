@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
-import React, { useState } from "react";
-
+import React, { useState, CSSProperties } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 import { ForecastCard } from "../ForecastCard";
 import { BiSearch } from "react-icons/bi";
 import { MdVisibility } from "react-icons/md";
@@ -15,6 +15,7 @@ import { BsFillSunsetFill, BsFillSunriseFill } from "react-icons/bs";
 import { v4 as uuidv4 } from "uuid";
 import {
   MainContainer,
+  Loader,
   Input,
   IconButton,
   SectionContainer,
@@ -39,12 +40,15 @@ import {
   TodayText,
 } from "./styles";
 import { ResponsiveMap } from "../ResponsiveMap";
+import { HashLoader } from "react-spinners";
 
 export const GetData = () => {
   const API_KEY = "cebae210006b4c97bdb902dac1ad1522";
   // const baseUrl = "https://api.openweathermap.org/data/2.5";
 
   const [location, setLocation] = useState("");
+  let [loading, setLoading] = useState(true);
+  let [color, setColor] = useState("#ffffff");
   const [framedata, setFramedata] = useState({
     host: "",
     radar: "",
@@ -77,6 +81,7 @@ export const GetData = () => {
   const [forecast, setForecast] = useState([]);
 
   const getCurrentWeather = async () => {
+    setLoading(true);
     const response = await fetch(
       `https://api.weatherbit.io/v2.0/current?&city=${location}&key=${API_KEY}`
     );
@@ -140,6 +145,7 @@ export const GetData = () => {
         }));
         const updatedList = convertedList.slice(1);
         setForecast(updatedList);
+        setLoading(false);
       }
     } catch (e) {
       console.log(e);
@@ -218,200 +224,203 @@ export const GetData = () => {
             <BiSearch />
           </IconButton>
         </SearchContainer>
-        <CurrentWeatherContainer>
-          <CurrentWeatherResponsiveContainer>
-            <SectionContainer flex="column" p="8px">
-              <TodayText>Today - {date.toLocaleString()}</TodayText>
-              <Image
-                alt="weather icon"
-                src={
-                  weather.iconUrl !== ""
-                    ? ` https://www.weatherbit.io/static/img/icons/${weather.iconUrl}.png`
-                    : ""
-                }
-              />
+        {loading ? (
+          <Loader>
+            <HashLoader
+              color={color}
+              loading={loading}
+              // cssOverride={override}
+              size={100}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          </Loader>
+        ) : (
+          <div>
+            <CurrentWeatherContainer>
+              <CurrentWeatherResponsiveContainer>
+                <SectionContainer flex="column" p="8px">
+                  <TodayText>Today - {date.toLocaleString()}</TodayText>
+                  <Image
+                    alt="weather icon"
+                    src={
+                      weather.iconUrl !== ""
+                        ? ` https://www.weatherbit.io/static/img/icons/${weather.iconUrl}.png`
+                        : ""
+                    }
+                  />
 
-              <DetailsContainer flex="column" align="center">
-                <Temperature>
-                  {Math.round(weather.temperature)}°<span>c</span>
-                </Temperature>
+                  <DetailsContainer flex="column" align="center">
+                    <Temperature>
+                      {Math.round(weather.temperature)}°<span>c</span>
+                    </Temperature>
 
-                <WeatherCondition>{weather.weatherCondition}</WeatherCondition>
-                <DetailsContainer>
-                  <Text font="18px" weight="400">
-                    Clouds: {weather.clouds}%
-                  </Text>
-                  <Text font="18px" weight="400">
-                    Feel: {Math.round(weather.feelsLike)}°c
-                  </Text>
-                </DetailsContainer>
-              </DetailsContainer>
-            </SectionContainer>
-            <IconContainer flex="row" p="5px">
-              <DetailsContainer
-                flex="row"
-                justify="center"
-                align="center"
-                p="10px"
-                w="30%"
-              >
-                <Icon>
-                  <WiShowers />
-                </Icon>
-                <Text font="14px" weight="500">
-                  {precipitation}
-                  mm/h
-                </Text>
-              </DetailsContainer>
-              <DetailsContainer
-                p="10px"
-                flex="row"
-                justify="center"
-                align="center"
-                w="30%"
-              >
-                <Icon>
-                  <WiStrongWind />
-                </Icon>
-                <Text font="14px" weight="500">
-                  {Math.round(weather.wind)}km/h
-                </Text>
-              </DetailsContainer>
-              <DetailsContainer
-                p="10px"
-                flex="row"
-                justify="center"
-                align="center"
-                w="30%"
-              >
-                <Icon>
-                  <WiHumidity />
-                </Icon>
-                <Text font="14px" weight="500">
-                  {weather.humidity}%
-                </Text>
-              </DetailsContainer>
-              <DetailsContainer
-                p="10px"
-                flex="row"
-                justify="center"
-                align="center"
-                w="30%"
-              >
-                <Icon>
-                  <MdVisibility />
-                </Icon>
-                <Text font="14px" weight="500">
-                  {weather.visibility} km
-                </Text>
-              </DetailsContainer>
-              <DetailsContainer
-                p="10px"
-                flex="row"
-                justify="center"
-                align="center"
-                w="30%"
-              >
-                <Icon>
-                  <WiBarometer />
-                </Icon>
-                <Text font="14px" weight="500">
-                  {weather.pressure} hPa
-                </Text>
-              </DetailsContainer>
-              <DetailsContainer
-                p="10px"
-                flex="row"
-                justify="center"
-                align="center"
-                w="30%"
-              >
-                {/* <Icon>UV</Icon> */}
-                <Text font="14px" weight="500">
-                  <span>UV</span> {Math.round(weather.uv, 2)}
-                </Text>
-              </DetailsContainer>
-              <DetailsContainer
-                p="10px"
-                flex="row"
-                justify="center"
-                align="center"
-                w="30%"
-              >
-                {/* <Icon>
+                    <WeatherCondition>
+                      {weather.weatherCondition}
+                    </WeatherCondition>
+                    <DetailsContainer>
+                      <Text font="18px" weight="400">
+                        Clouds: {weather.clouds}%
+                      </Text>
+                      <Text font="18px" weight="400">
+                        Feel: {Math.round(weather.feelsLike)}°c
+                      </Text>
+                    </DetailsContainer>
+                  </DetailsContainer>
+                </SectionContainer>
+                <IconContainer flex="row" p="5px">
+                  <DetailsContainer
+                    flex="row"
+                    justify="center"
+                    align="center"
+                    p="10px"
+                    w="30%"
+                  >
+                    <Icon>
+                      <WiShowers />
+                    </Icon>
+                    <Text font="14px" weight="500">
+                      {precipitation}
+                      mm/h
+                    </Text>
+                  </DetailsContainer>
+                  <DetailsContainer
+                    p="10px"
+                    flex="row"
+                    justify="center"
+                    align="center"
+                    w="30%"
+                  >
+                    <Icon>
+                      <WiStrongWind />
+                    </Icon>
+                    <Text font="14px" weight="500">
+                      {Math.round(weather.wind)}km/h
+                    </Text>
+                  </DetailsContainer>
+                  <DetailsContainer
+                    p="10px"
+                    flex="row"
+                    justify="center"
+                    align="center"
+                    w="30%"
+                  >
+                    <Icon>
+                      <WiHumidity />
+                    </Icon>
+                    <Text font="14px" weight="500">
+                      {weather.humidity}%
+                    </Text>
+                  </DetailsContainer>
+                  <DetailsContainer
+                    p="10px"
+                    flex="row"
+                    justify="center"
+                    align="center"
+                    w="30%"
+                  >
+                    <Icon>
+                      <MdVisibility />
+                    </Icon>
+                    <Text font="14px" weight="500">
+                      {weather.visibility} km
+                    </Text>
+                  </DetailsContainer>
+                  <DetailsContainer
+                    p="10px"
+                    flex="row"
+                    justify="center"
+                    align="center"
+                    w="30%"
+                  >
+                    <Icon>
+                      <WiBarometer />
+                    </Icon>
+                    <Text font="14px" weight="500">
+                      {weather.pressure} hPa
+                    </Text>
+                  </DetailsContainer>
+                  <DetailsContainer
+                    p="10px"
+                    flex="row"
+                    justify="center"
+                    align="center"
+                    w="30%"
+                  >
+                    {/* <Icon>UV</Icon> */}
+                    <Text font="14px" weight="500">
+                      <span>UV</span> {Math.round(weather.uv, 2)}
+                    </Text>
+                  </DetailsContainer>
+                  <DetailsContainer
+                    p="10px"
+                    flex="row"
+                    justify="center"
+                    align="center"
+                    w="30%"
+                  >
+                    {/* <Icon>
                   <WiBarometer />
                 </Icon> */}
-                <Text font="14px" weight="500">
-                  aqi {weather.airquality}
-                </Text>
-              </DetailsContainer>
-              <DetailsContainer
-                p="10px"
-                flex="row"
-                justify="center"
-                align="center"
-                w="30%"
-              >
-                <Icon>
-                  <BsFillSunriseFill />
-                </Icon>
-                <Text font="14px" weight="500">
-                  {weather.sunrise}
-                </Text>
-              </DetailsContainer>
-              <DetailsContainer
-                p="10px"
-                flex="row"
-                justify="center"
-                align="center"
-                w="30%"
-              >
-                <Icon>
-                  <BsFillSunsetFill />
-                </Icon>
-                <Text font="14px" weight="500">
-                  {weather.sunset}
-                </Text>
-              </DetailsContainer>
-            </IconContainer>
-          </CurrentWeatherResponsiveContainer>
-          {/* Raw embeddable frame of RainViewer API service */}
-          {/* <iframe
+                    <Text font="14px" weight="500">
+                      aqi {weather.airquality}
+                    </Text>
+                  </DetailsContainer>
+                  <DetailsContainer
+                    p="10px"
+                    flex="row"
+                    justify="center"
+                    align="center"
+                    w="30%"
+                  >
+                    <Icon>
+                      <BsFillSunriseFill />
+                    </Icon>
+                    <Text font="14px" weight="500">
+                      {weather.sunrise}
+                    </Text>
+                  </DetailsContainer>
+                  <DetailsContainer
+                    p="10px"
+                    flex="row"
+                    justify="center"
+                    align="center"
+                    w="30%"
+                  >
+                    <Icon>
+                      <BsFillSunsetFill />
+                    </Icon>
+                    <Text font="14px" weight="500">
+                      {weather.sunset}
+                    </Text>
+                  </DetailsContainer>
+                </IconContainer>
+              </CurrentWeatherResponsiveContainer>
+              {/* Raw embeddable frame of RainViewer API service */}
+              {/* <iframe
           src="https://www.rainviewer.com/map.html?loc=37.44,-97.2729,5&oFa=0&oC=1&oU=0&oCS=1&oF=0&oAP=1&c=3&o=90&lm=1&layer=radar&sm=1&sn=1"
           width="100%"
           frameborder="0"
           style={{ border: 0, height: "50vh" }}
           allowfullscreen
         ></iframe> */}
-          <ResponsiveMap coordinates={weather.coords} framedata={framedata} />
-        </CurrentWeatherContainer>
-        <List>
-          {forecast.map((eachItem) => (
-            <ForecastCard forecastData={eachItem} key={eachItem.id} />
-          ))}
-        </List>
+              <ResponsiveMap
+                coordinates={weather.coords}
+                framedata={framedata}
+              />
+            </CurrentWeatherContainer>
+            <List>
+              {forecast.map((eachItem) => (
+                <ForecastCard forecastData={eachItem} key={eachItem.id} />
+              ))}
+            </List>
 
-        {/* <Flex justify="space-around">
-        <Flex direction="column" p="1">
-          <Text p="1">Min- {Math.round(weather.minTemperature)}°C</Text>
-          <Text p="1">Max- {Math.round(weather.maxTemperature)}°C</Text>
-          <Text p="1">Feel- {Math.round(weather.feelsLike)}°C</Text>
-          <Text p="1">Humidity- {weather.humidity}%</Text>
-        </Flex>
-
-        <Flex direction="column" p="1">
-          <Text p="1">Pressure- {weather.pressure}hPa</Text>
-          <Text p="1">Wind- {Math.ceil(weather.wind * 3.6)}Km/h</Text>
+            {/*
           <Text p="1">Sunrise- {sunrise.toLocaleString()}</Text>
           <Text p="1">Sunset- {sunset.toLocaleString()}</Text>
-          <Text p="1">
-            Visibility- {Math.round(weather.visibility / 1000)}KM
-          </Text>
-        </Flex>
-      </Flex>
-      <Flex mt="2">
-       
-      </Flex> */}
+*/}
+          </div>
+        )}
       </ResponsiveContainer>
     </MainContainer>
   );

@@ -55,6 +55,7 @@ export const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 10px;
+  /* height: 10vh; */
 `;
 
 export const LogoContainer = styled(Header)`
@@ -210,6 +211,8 @@ export const List = styled.ul`
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
   border-radius: 32px;
   margin: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 `;
 
 export const ListItem = styled.li`
@@ -260,7 +263,7 @@ export const InnerList = styled.ul`
   flex-direction: row;
   justify-content: space-around;
   flex-wrap: wrap;
-  width: 90%;
+  width: 100%;
   background: rgba(0, 16, 38, 0.35);
   padding: 10px;
   border-radius: 16px;
@@ -278,7 +281,7 @@ export const InnerListItem = styled.li`
   font-family: inherit;
   font-size: 12px;
   padding: 3px;
-  font-weight: 300;
+  font-weight: 500;
   @media screen and (min-width: 768px) {
     width: 33%;
     text-align: center;
@@ -309,6 +312,15 @@ export const TodayText = styled.p`
   /* align-self: flex-start; */
   font-size: 20px;
   font-weight: 700;
+`;
+
+export const Loader = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 85vh;
 `;
 // background: linear-gradient(to right, #bdc3c7, #2c3e50) - rain
 //background: linear-gradient(to right, #076585, #fff) - clear sky

@@ -8,8 +8,10 @@ import {
   ListItem,
   InnerListItem,
   ExpandButton,
+  expand,
 } from "../GetData/styles";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { motion } from "framer-motion";
 
 export const ForecastCard = (props) => {
   const { forecastData } = props;
@@ -23,6 +25,18 @@ export const ForecastCard = (props) => {
     } else {
       setShowdata(false);
     }
+  };
+
+  const expandAnimation = {
+    visible: {
+      scaleY: 1,
+      transition: {
+        ease: "easeInOut",
+        duration: 0.3,
+        // dealy: 0.5,
+      },
+    },
+    hidden: { scaleY: 0 },
   };
 
   return (
@@ -51,7 +65,10 @@ export const ForecastCard = (props) => {
         </ExpandButton>
       </MainData>
       {showdata ? (
-        <AdditionalData>
+        <motion.div
+          className="additional-data-container"
+          transition={{ duration: 1, ease: "easeInOut" }}
+        >
           <InnerList>
             <InnerListItem>Clouds: {forecastData.clouds}%</InnerListItem>
             <InnerListItem>
@@ -74,7 +91,7 @@ export const ForecastCard = (props) => {
             <InnerListItem>Sunrise: {forecastData.sunrise}</InnerListItem>
             <InnerListItem>Sunset: {forecastData.sunset}</InnerListItem>
           </InnerList>
-        </AdditionalData>
+        </motion.div>
       ) : null}
     </ListItem>
   );
