@@ -70,6 +70,25 @@ export const SearchContainer = styled.div`
   margin: 10px;
   background: #eeeeee;
   border-radius: 32px;
+  /* max-width: 400px; */
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+`;
+
+export const HeaderSearchContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+  background: #eeeeee;
+  border-radius: 32px;
+  /* flex-grow: 1; */
+  max-width: 500x;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const SectionContainer = styled(SearchContainer)`
@@ -110,7 +129,8 @@ export const DetailsContainer = styled(SectionContainer)`
 `;
 
 export const Input = styled.input`
-  width: 80%;
+  width: 100%;
+  /* max-width: 400px; */
   border: none;
   background: none;
   padding: 8px;
@@ -297,7 +317,16 @@ export const Loader = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 85vh;
+  height: 78vh;
+  @media screen and (min-width: 768px) {
+    height: 83.9vh;
+  }
+`;
+
+export const LoadingText = styled(Text)`
+  color: #ffffff;
+  font-weight: 500;
+  margin: 10px;
 `;
 // background: linear-gradient(to right, #bdc3c7, #2c3e50) - rain
 //background: linear-gradient(to right, #076585, #fff) - clear sky

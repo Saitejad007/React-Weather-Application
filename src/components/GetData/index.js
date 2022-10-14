@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ForecastCard } from "../ForecastCard";
 import { BiSearch } from "react-icons/bi";
 import { MdVisibility } from "react-icons/md";
@@ -17,8 +17,10 @@ import {
   Loader,
   Input,
   IconButton,
+  LoadingText,
   SectionContainer,
   SearchContainer,
+  HeaderSearchContainer,
   IconContainer,
   CurrentWeatherContainer,
   ResponsiveContainer,
@@ -38,7 +40,8 @@ import {
   TodayText,
 } from "./styles";
 import { ResponsiveMap } from "../ResponsiveMap";
-import { HashLoader } from "react-spinners";
+import { PropagateLoader } from "react-spinners";
+import { Footer } from "../Footer";
 
 export const GetData = () => {
   const API_KEY = "cebae210006b4c97bdb902dac1ad1522";
@@ -71,11 +74,97 @@ export const GetData = () => {
   });
   const [forecast, setForecast] = useState([]);
 
-  const getCurrentWeather = async () => {
+  const getCurLocationWeather = async (position) => {
     setLoading(true);
-    const response = await fetch(
-      `https://api.weatherbit.io/v2.0/current?&city=${location}&key=${API_KEY}`
+    const currentWeatherUrl = `https://api.weatherbit.io/v2.0/current?lat=${position.coords.latitude}&lon=${position.coords.longitude}&key=${API_KEY}`;
+    const response = await fetch(currentWeatherUrl);
+    if (response.ok) {
+      const curWeatherJsonObject = await response.json();
+      const data = curWeatherJsonObject.data[0];
+      console.log(data);
+      setWeather((previousState) => ({
+        ...previousState,
+        name: data.city_name,
+        country: data.country_code,
+        clouds: data.clouds,
+        temperature: data.temp,
+        feelsLike: data.app_temp,
+        airquality: data.aqi,
+        precipitation: data.precip,
+        pressure: data.pres,
+        humidity: data.rh,
+        date: data.datetime,
+        visibility: data.vis,
+        sunrise: data.sunrise,
+        sunset: data.sunset,
+        weatherCondition: data.weather.description,
+        windDirection: data.wind_cdir,
+        wind: data.wind_spd,
+        iconUrl: data.weather.icon,
+        uv: data.uv,
+        coords: {
+          lat: data.lat,
+          lon: data.lon,
+        },
+      }));
+      setLocation("");
+    }
+    const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${position.coords.latitude}&lon=${position.coords.longitude}&key=${API_KEY}`;
+    try {
+      const forecastData = await fetch(url);
+      if (forecastData.ok) {
+        const forecastJsonObject = await forecastData.json();
+        const forecastList = forecastJsonObject.data;
+        const convertedList = forecastList.map((eachItem) => ({
+          id: uuidv4(),
+          clouds: eachItem.clouds,
+          date: eachItem.datetime,
+          maxTemperature: eachItem.max_temp,
+          minTemperature: eachItem.min_temp,
+          feelsLike: eachItem.temp,
+          weatherCondition: eachItem.weather.description,
+          wind: eachItem.wind_spd,
+          windDirection: eachItem.wind_cdir,
+          iconUrl: eachItem.weather.icon,
+          visibility: eachItem.vis,
+          uv: eachItem.uv,
+          humidity: eachItem.rh,
+          pressure: eachItem.pres,
+          precipitation: eachItem.precip,
+          moonRise: eachItem.moonrise_ts,
+          moonSet: eachItem.moonset_ts,
+          sunrise: eachItem.sunrise_ts,
+          sunset: eachItem.sunset_ts,
+        }));
+        const updatedList = convertedList.slice(1);
+        setForecast(updatedList);
+        setLoading(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        // console.log(position);
+        if (position.coords !== null) {
+          getCurLocationWeather(position);
+        }
+      },
+      function (error) {
+        console.error("Error Code = " + error.code + " - " + error.message);
+      }
     );
+  }, []);
+
+  const getCurrentWeather = async () => {
+    console.log("api called");
+    setLoading(true);
+
+    const currentWeatherUrl = `https://api.weatherbit.io/v2.0/current?city=${location}&key=${API_KEY}`;
+    const response = await fetch(currentWeatherUrl);
     if (response.ok) {
       const curWeatherJsonObject = await response.json();
       const data = curWeatherJsonObject.data[0];
@@ -163,6 +252,23 @@ export const GetData = () => {
             />
             <Heading>Weather Station</Heading>
           </LogoContainer>
+          <HeaderSearchContainer>
+            <Input
+              type="text"
+              value={location}
+              onChange={handleChange}
+              onKeyPress={({ key }) => {
+                key === "Enter" && getCurrentWeather();
+              }}
+              placeholder="Enter City..."
+            />
+            <IconButton
+              aria-label="Search database"
+              onClick={getCurrentWeather}
+            >
+              <BiSearch />
+            </IconButton>
+          </HeaderSearchContainer>
           <LogoContainer>
             <Button>
               <BiCurrentLocation />
@@ -189,11 +295,14 @@ export const GetData = () => {
         </SearchContainer>
         {loading ? (
           <Loader>
-            <HashLoader
+            <LoadingText>
+              We're fetching the data, meanwhile just chill!
+            </LoadingText>
+            <PropagateLoader
               color={color}
               loading={loading}
               // cssOverride={override}
-              size={100}
+              size={20}
               aria-label="Loading Spinner"
               data-testid="loader"
             />
@@ -373,6 +482,7 @@ export const GetData = () => {
           </div>
         )}
       </ResponsiveContainer>
+      <Footer />
     </MainContainer>
   );
 };
