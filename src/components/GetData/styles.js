@@ -91,9 +91,11 @@ export const HeaderSearchContainer = styled.div`
   }
 `;
 
-export const SectionContainer = styled(SearchContainer)`
+export const SectionContainer = styled.div`
+  display: flex;
   flex-direction: ${(props) => props.flex};
   align-items: center;
+  margin: 10px;
   justify-content: center;
   border-radius: 32px;
   color: #fff;
@@ -205,7 +207,7 @@ export const Text = styled.p`
 
 export const ForecastText = styled.p`
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   padding: 4px;
   span {
     font-size: 11px;
@@ -281,7 +283,7 @@ export const InnerListItem = styled.li`
   padding: 3px;
   font-weight: 500;
   @media screen and (min-width: 768px) {
-    width: 33%;
+    width: 50%;
     text-align: center;
     padding: 5px;
     font-size: 14px;

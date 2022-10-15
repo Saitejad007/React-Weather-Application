@@ -81,7 +81,7 @@ export const GetData = () => {
     if (response.ok) {
       const curWeatherJsonObject = await response.json();
       const data = curWeatherJsonObject.data[0];
-      console.log(data);
+
       setWeather((previousState) => ({
         ...previousState,
         name: data.city_name,
@@ -160,7 +160,6 @@ export const GetData = () => {
   }, []);
 
   const getCurrentWeather = async () => {
-    console.log("api called");
     setLoading(true);
 
     const currentWeatherUrl = `https://api.weatherbit.io/v2.0/current?city=${location}&key=${API_KEY}`;
@@ -168,7 +167,6 @@ export const GetData = () => {
     if (response.ok) {
       const curWeatherJsonObject = await response.json();
       const data = curWeatherJsonObject.data[0];
-      console.log(data);
       setWeather((previousState) => ({
         ...previousState,
         name: data.city_name,
@@ -472,7 +470,10 @@ export const GetData = () => {
           style={{ border: 0, height: "50vh" }}
           allowfullscreen
         ></iframe> */}
-              <ResponsiveMap coordinates={weather.coords} />
+              <ResponsiveMap
+                coordinates={weather.coords}
+                temperature={weather.temperature}
+              />
             </CurrentWeatherContainer>
             <List>
               {forecast.map((eachItem) => (

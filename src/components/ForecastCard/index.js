@@ -79,7 +79,7 @@ export const ForecastCard = (props) => {
             </InnerListItem>
             <InnerListItem>UV: {forecastData.uv}</InnerListItem>
             <InnerListItem>Humidity: {forecastData.humidity}%</InnerListItem>
-            <InnerListItem>Pres: {forecastData.pressure} hPa</InnerListItem>
+            {/* <InnerListItem>Pres: {forecastData.pressure} hPa</InnerListItem> */}
             <InnerListItem>
               Precip: {forecastData.precipitation} mm
             </InnerListItem>

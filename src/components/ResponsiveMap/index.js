@@ -3,12 +3,14 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
 import { React, useEffect, useState } from "react";
 
-export function GetPosition(coordinates) {
+export function GetPosition(details) {
+  const coordinates = details.details[0];
+  const temperature = details.details[1];
   const map = useMap();
   const [position, setPosition] = useState([28.6448, 77.216721]);
   useEffect(() => {
-    setPosition(coordinates.coordinates);
-  }, [coordinates.coordinates]);
+    setPosition(coordinates);
+  }, [coordinates]);
   map.flyTo(position, 12, { duration: 2 });
 
   // RainViewer API
@@ -16,15 +18,17 @@ export function GetPosition(coordinates) {
   return (
     <Marker position={position}>
       <Popup>
-        A pretty CSS3 popup. <br /> Easily customizable.
+        <h1>Current Temperature: {temperature}°c</h1>
       </Popup>
     </Marker>
   );
 }
 
 export const ResponsiveMap = (props) => {
-  const { coordinates } = props;
+  const { coordinates, temperature } = props;
+
   const pos = [coordinates.lat, coordinates.lon];
+  const details = [pos, temperature];
 
   return (
     <div className="main-container">
@@ -33,7 +37,7 @@ export const ResponsiveMap = (props) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <GetPosition coordinates={pos} />
+        <GetPosition details={details} />
       </MapContainer>
     </div>
   );
